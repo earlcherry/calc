@@ -51,7 +51,7 @@ func calc(arg1 float64, arg2 float64, sign string) {
 	case "/":
 		fmt.Println(arg1 / arg2)
 	case "^":
-		math.Pow(arg1, arg2)
+		fmt.Println(math.Pow(arg1, arg2))
 	default:
 		fmt.Println("Unknown sign ", sign)
 	}
