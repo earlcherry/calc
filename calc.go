@@ -9,12 +9,11 @@ import (
 )
 
 const (
-	pattern = `\d+\.\d+|[+\-*/^]|\d+`
+	pattern = `\d+\.\d+|\W|\d+`
 	count   = -1
 )
 
 func main() {
-
 	switch len(os.Args) {
 	case 1:
 		fmt.Println("You must entered an expression.")
@@ -31,9 +30,9 @@ func prepare(args []string) {
 	if args != nil && len(args) == 3 {
 		arg1, err1 := strconv.ParseFloat(args[0], 64)
 		arg2, err2 := strconv.ParseFloat(args[2], 64)
-		if err1 == nil && err2 == nil{
+		if err1 == nil && err2 == nil {
 			calc(arg1, arg2, args[1])
-		}else{
+		} else {
 			fmt.Println("Wrong expression.")
 		}
 	} else {
