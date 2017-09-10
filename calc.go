@@ -3,55 +3,61 @@ package main
 import (
 	"os"
 	"fmt"
-	"regexp"
-	"math"
+	"go/parser"
+	"strings"
+	"go/ast"
+	"go/token"
 	"strconv"
 )
 
-const (
-	pattern = `\d+\.\d+|\W|\d+`
-	count   = -1
-)
-
 func main() {
-	switch len(os.Args) {
-	case 1:
-		fmt.Println("You must entered an expression.")
-	case 2:
-		parse(os.Args[1])
-	default:
-		fmt.Println("Too many arguments.")
+	if len(os.Args) < 1 {
+		fmt.Println("No expression provided.")
+		os.Exit(1)
 	}
+	expression := strings.Join(os.Args[1:], " ")
+	expr, err := parser.ParseExpr(expression)
+	if err != nil {
+		fmt.Println("Error parsing expression")
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Println(eval(expr))
 }
-func parse(expression string) {
-	prepare(regexp.MustCompile(pattern).FindAllString(expression, count))
-}
-func prepare(args []string) {
-	if args != nil && len(args) == 3 {
-		arg1, err1 := strconv.ParseFloat(args[0], 64)
-		arg2, err2 := strconv.ParseFloat(args[2], 64)
-		if err1 == nil && err2 == nil {
-			calc(arg1, arg2, args[1])
-		} else {
-			fmt.Println("Wrong expression.")
+
+func eval(expr ast.Expr) float64 {
+	switch exp := expr.(type) {
+	case *ast.ParenExpr:
+		return eval(exp.X)
+	case *ast.BinaryExpr:
+		return evalBinary(exp)
+	case *ast.BasicLit:
+		switch exp.Kind {
+		case token.INT:
+			i, _ := strconv.Atoi(exp.Value)
+			return float64(i)
+		case token.FLOAT:
+			i, _ := strconv.ParseFloat(exp.Value, 64)
+			return i
 		}
-	} else {
-		fmt.Println("Wrong expression.")
 	}
+	return 0
 }
-func calc(arg1 float64, arg2 float64, sign string) {
-	switch sign {
-	case "+":
-		fmt.Println(arg1 + arg2)
-	case "-":
-		fmt.Println(arg1 - arg2)
-	case "*":
-		fmt.Println(arg1 * arg2)
-	case "/":
-		fmt.Println(arg1 / arg2)
-	case "^":
-		fmt.Println(math.Pow(arg1, arg2))
-	default:
-		fmt.Println("Unknown sign ", sign)
+
+func evalBinary(expr *ast.BinaryExpr) float64 {
+	left := eval(expr.X)
+	right := eval(expr.Y)
+	switch expr.Op {
+	case token.ADD:
+		return left + right
+	case token.SUB:
+		return left - right
+	case token.MUL:
+		return left * right
+	case token.QUO:
+		return left / right
+	case token.REM:
+		return float64(int(left) % int(right))
 	}
+	return 0
 }
