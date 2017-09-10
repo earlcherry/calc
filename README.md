@@ -24,3 +24,18 @@ $ calc "(3 + 3) * 3"
 ```
 
 Supported operands: +, -, *, /, %
+
+## Installation
+
+```shell
+$ go get
+$ go build calc.go
+$ sudo mv ./calc /usr/bin/local/=
+```
+
+Now you can evaluate expressions simply by typing `=` in your shell:
+
+```shell
+$ = 1 + 1
+2
+```
