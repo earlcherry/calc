@@ -28,8 +28,7 @@ Supported operands: +, -, *, /, %
 ## Installation
 
 ```shell
-$ go get
-$ go build calc.go
+$ go get github.com/mkrou/calc
 $ sudo mv ./calc /usr/bin/local/=
 ```
 
