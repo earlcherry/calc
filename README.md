@@ -29,7 +29,7 @@ Supported operands: +, -, *, /, %
 
 ```shell
 $ go get github.com/mkrou/calc
-$ sudo mv $GOPATH/bin/calc /usr/bin/local/=
+$ sudo mv $GOPATH/bin/calc /usr/local/bin/=
 ```
 
 Now you can evaluate expressions simply by typing `=` in your shell:
